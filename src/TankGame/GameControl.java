@@ -9,26 +9,57 @@ import Network.SerialServer;
 import TankGame.Element.Type;
 
 /**
+ * A játékmenet során számolja ki a tankok, lövedékek pozícióját a játékosoktól érkezõ vezérlési adatok alapján.
+ * @author Szabó Dániel
  *
- * @author Predi
  */
-
 public class GameControl {
 
-
+	/**
+	 * A játék állapota
+	 */
 	public StateMachine SM;
+	/**
+	 * A játszó játékosok listája.
+	 */
 	public CopyOnWriteArrayList<Player> players;
-	private static final double T = 10; 
+	/**
+	 * A mintavételi idõ - ekkora idõközönként számolja ki az osztály az objektumok pozícióját.
+	 */
+	private static final double T = 10;
+	/**
+	 * A játék vége után ennyi idõt kell várni a következõ játékig.
+	 */
 	private static final double GAME_END_WAIT_TIME = 3000;
+	/**
+	 * A pályán található objektumok listája.
+	 */
 	public CopyOnWriteArrayList<Element> elements;
+	/**
+	 * A pálya térképe.
+	 */
 	public Map map;
+	/**
+	 * Kizárólag a gamecontrolhoz tartozik szerver, hozzá érkeznek a játékosok attribútumai.
+	 */
 	public SerialServer server;
+	/**
+	 * A játék állapotát leíró változó
+	 */
 	public GameState gameState;
 	
+	/**
+	 * Minimális idõ két powerup között.
+	 */
 	private final double POWERUPTIME = 3;
+	/**
+	 * Powerupok érkezésének gyakorisága.
+	 */
 	private double PowerUpTimer = POWERUPTIME + Math.random()*5;
 	 
-	
+	/**
+	 * Új játék indítása a korábbi befejezése után.
+	 */
 	private void newMatch(){
 		map = new Map();
 		elements = new CopyOnWriteArrayList<Element>();
@@ -39,6 +70,9 @@ public class GameControl {
 		}
 	}
 	
+	/**
+	 * Szerversocket indítása.
+	 */
 	public void startServer(){
 		if(server != null){
 			server.disconnect();
@@ -47,13 +81,26 @@ public class GameControl {
  		server.connect("localhost");
 	}
 	
+	/**
+	 * Szerversocket leállítása.
+	 */
 	public void closeServer(){
 		server.disconnect();
 	}
+	
+	/**
+	 * Megadja, hogy épp folyik-e a játék.
+	 * @return isGame Folyamatban van-e a játék.
+	 */
 	public boolean currentStateIsGame(){
 		return SM.currentState == State.GameHost;
 	}
 	
+	/**
+	 * A játéklogikát megvalósító szál.
+	 * @author Szabó Dániel
+	 *
+	 */
 	private class PeriodicControl extends Thread {
 		@Override
 		public void run() {
@@ -161,12 +208,18 @@ public class GameControl {
 		t.start();
 	}
 	
+	/**
+	 * Játék indítása.
+	 */
 	void startGame(){
 		map = new Map();
 		elements = new CopyOnWriteArrayList<Element>();
 	}
 	
-	
+	/**
+	 * Játékos fogadása, majd feldolgozása.
+	 * @param _player Fogadott játékos
+	 */
 	public void playerReceived(Player _player) {
 		int i;
 		for (i = 0; i < players.size(); i++) {

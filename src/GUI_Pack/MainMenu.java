@@ -11,6 +11,11 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 
+/**
+ * Fõmenü felület.
+ * @author Hegyi Sámuel
+ *
+ */
 public class MainMenu {
 	private GUI gui;
 	public JFrame frm;
@@ -81,6 +86,5 @@ public class MainMenu {
 			}
 		});
 		mnNewMenu.add(mntmKeySettings);
-
 	}
 }

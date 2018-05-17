@@ -1,8 +1,14 @@
 package TankGame;
 
-
+/**
+ * Állapotok közötti váltást okozó eseményeket kezelõ osztály.
+ * @author Szabó Dániel
+ *
+ */
 public enum State implements StateEventListener {
-	
+	/**
+	 * Fõmenüben történõ állapotátmenetek.
+	 */
 	MainMenu{
 
 		@Override
@@ -30,6 +36,9 @@ public enum State implements StateEventListener {
 		}
 
 	},
+	/**
+	 * Host game menüben történõ állapotátmenetek.
+	 */
 	HostGame {
 
 		@Override
@@ -58,6 +67,9 @@ public enum State implements StateEventListener {
 		}
 
 	},
+	/**
+	 * Join game menüben történõ állapotátmenetek.
+	 */
 	JoinGame {
 
 		@Override
@@ -86,6 +98,9 @@ public enum State implements StateEventListener {
 		}
 
 	},
+	/**
+	 * Lobby host mennüben történõ állapotátmenetek.
+	 */
 	LobbyHost{
 
 		@Override
@@ -114,6 +129,9 @@ public enum State implements StateEventListener {
 		}
 		
 	},
+	/**
+	 * Lobby kliens menüben történõ állapotátmenetek.
+	 */
 	Lobby{
 
 		@Override
@@ -143,6 +161,9 @@ public enum State implements StateEventListener {
 			return this;
 		}
 	},
+	/**
+	 * Ready jelzés kiadása utáni állapotátmenetek.
+	 */
 	Ready{
 
 		@Override
@@ -175,6 +196,9 @@ public enum State implements StateEventListener {
 		}
 		
 	},
+	/**
+	 * Beállítások menüben történõ állapotátmenetek.
+	 */
 	Settings {
 
 		@Override
@@ -209,6 +233,9 @@ public enum State implements StateEventListener {
 
 	
 	},
+	/**
+	 * Fõmenüben történõ állapotátmenetek.
+	 */
 	GameHost{
 
 		@Override
@@ -240,8 +267,10 @@ public enum State implements StateEventListener {
 			System.exit(0);
 			return this;
 		}
-		
 	},
+	/**
+	 * A játék során történõ állapotátmenetek.
+	 */
 	Game{
 
 		@Override
@@ -273,9 +302,6 @@ public enum State implements StateEventListener {
 			System.exit(0);
 			return this;
 		}
-
-	
 	};
-	
 }
 

@@ -17,6 +17,11 @@ import javax.swing.JRadioButton;
 
 import GUI_Pack.GUI;
 
+/**
+ * Játékosokra várakozó felület.
+ * @author Hegyi Sámuel
+ *
+ */
 public class Lobby {
 
 	public JFrame frm;
@@ -25,7 +30,7 @@ public class Lobby {
 	public JButton btnStart;
 	
 	/**
-	 * Launch the application.
+	 * Elindítja az alkalmazást.
 	 */
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -40,9 +45,6 @@ public class Lobby {
 		});
 	}
 
-	/**
-	 * Create the application.
-	 */
 	public Lobby(GUI gui){
 		this.gui= gui;
 		frm = new JFrame();

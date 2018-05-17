@@ -12,11 +12,12 @@ import java.awt.geom.Point2D;
 import java.io.IOException;
 import java.io.Serializable;
 
+/**
+ * Tankot megvalósító osztály.
+ * @author Szabó Dániel
+ *
+ */
 public class Tank extends Element implements Serializable {
-
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	static final int LENGTH = 22;
 	private static final int WIDTH = 15;
@@ -29,11 +30,22 @@ public class Tank extends Element implements Serializable {
 	Bullet nextBullet;
 	public int bulletCounter = 0;
 
+	/**
+	 * Tank kiírása az output streambe.
+	 * @param stream Object Output Stream.
+	 * @throws IOException IO kivétel.
+	 */
 	private void writeObject(java.io.ObjectOutputStream stream) throws IOException{
 		stream.writeObject(color);
 		stream.writeObject(poly);	
 	}
 
+	/**
+	 *Tank fogadása az input streambõl.
+	 * @param stream Object Input Stream.
+	 * @throws IOException IO kivétel.
+	 * @throws ClassNotFoundException Ismeretlen osztály kivétel.
+	 */
 	private void readObject(java.io.ObjectInputStream stream) throws IOException, ClassNotFoundException{
 		color = (Color) stream.readObject();
 		poly = (Polygon)stream.readObject();		
@@ -41,7 +53,6 @@ public class Tank extends Element implements Serializable {
 
 
 	public Tank(Map map) {
-
 		do {
 			position = new Point2D.Double(Math.random()*map.MapWidth, Math.random()*map.MapHeight);
 			orientation = Math.random()*Math.PI;
@@ -54,8 +65,7 @@ public class Tank extends Element implements Serializable {
 		health = 1;
 	}
 
-
-
+	
 	private Polygon getPoly(){
 		int xPoly[] = { 1, 1, 1, 1 };
 		int yPoly[] = { 1, 1, 1, 1 };
@@ -66,9 +76,9 @@ public class Tank extends Element implements Serializable {
 			yPoly[i] = (int) ((signs[i][0] * LENGTH / 2 * Math.sin(orientation)
 					+ signs[i][1] * WIDTH / 2 * Math.cos(orientation)) + position.getY());
 		}
-
 		return new Polygon(xPoly, yPoly, xPoly.length);
 	}
+	
 	public Tank(Tank tank) {
 		// TODO Auto-generated constructor stub
 	}
@@ -90,6 +100,11 @@ public class Tank extends Element implements Serializable {
 		area = new Area(poly);
 	}
 
+	/**
+	 * Megadja, hogy a tank épp milyen poweruppal rendelkezik.
+	 * @author Szabó Dániel
+	 *
+	 */
 	public enum PowerUpType{
 		SHOTGUN
 	}
@@ -138,6 +153,10 @@ public class Tank extends Element implements Serializable {
 		}
 	}
 
+	/**
+	 * Visszaadja a tankot irányító játékost.
+	 * @return player A tankot irányító játékos.
+	 */
 	public Player getPlayer() {
 		return player;
 	}
@@ -207,8 +226,6 @@ public class Tank extends Element implements Serializable {
 				position.setLocation(position.getX() + dx,position.getY() + dy);
 			}
 		}
-
-
 	}
 }
 

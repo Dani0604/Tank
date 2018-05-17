@@ -7,9 +7,7 @@ import java.awt.event.ActionListener;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.DocumentEvent;
@@ -17,14 +15,18 @@ import javax.swing.event.DocumentListener;
 import javax.swing.AbstractListModel;
 import javax.swing.JButton;
 
+/**
+ * Szobához való csatlakozáskor megjelenõ felület.
+ * @author Hegyi Sámuel
+ *
+ */
 public class JoinGame {
 	public JTextField textField_2;
 	public JFrame frm;
 	public JPanel panel;
-	private GUI gui;
 
 	/**
-	 * Launch the application.
+	 * Elindítja az alkalmazást.
 	 */
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -40,10 +42,9 @@ public class JoinGame {
 	}
 
 	/**
-	 * Initialize the contents of the frame.
+	 * Inicializálja a felület tartalmát.
 	 */
 	public JoinGame(GUI gui) {
-		this.gui = gui;
 		frm = new JFrame();
 		frm.setTitle("Join Game");
 		frm.setBounds(100, 100, 612, 460);
@@ -116,51 +117,17 @@ public class JoinGame {
 		frm.add(textField_2);
 		textField_2.setColumns(10);
 
-		JButton btnNewButton = new JButton("Search");
+		/*JButton btnNewButton = new JButton("Search");
 		btnNewButton.setBounds(100, 320, 165, 50);
-		frm.add(btnNewButton);
+		frm.add(btnNewButton);*/
 
-		JButton btnNewButton_1 = new JButton("Join Game");
-		btnNewButton_1.addActionListener(new ActionListener() {
+		JButton btnJoinGame = new JButton("Join Game");
+		btnJoinGame.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				gui.onEventStartGame();
 			}
 		});
-		btnNewButton_1.setBounds(394, 55, 97, 25);
-		frm.add(btnNewButton_1);
-
-		JButton btnNewButton_2 = new JButton("Join Game");
-		btnNewButton_2.setBounds(394, 79, 97, 25);
-		frm.add(btnNewButton_2);
-
-		JButton btnNewButton_3 = new JButton("Join Game");
-		btnNewButton_3.setBounds(394, 103, 97, 25);
-		frm.add(btnNewButton_3);
-
-		JButton btnNewButton_4 = new JButton("Join Game");
-		btnNewButton_4.setBounds(394, 127, 97, 25);
-		frm.add(btnNewButton_4);
-
-		JButton btnNewButton_5 = new JButton("Join Game");
-		btnNewButton_5.setBounds(394, 151, 97, 25);
-		frm.add(btnNewButton_5);
-
-		JButton btnNewButton_6 = new JButton("Join Game");
-		btnNewButton_6.setBounds(394, 175, 97, 25);
-		frm.add(btnNewButton_6);
-
-		JButton btnNewButton_7 = new JButton("Join Game");
-		btnNewButton_7.setBounds(394, 199, 97, 25);
-		frm.add(btnNewButton_7);
-
-		JButton btnNewButton_8 = new JButton("Join Game");
-		btnNewButton_8.setBounds(394, 223, 97, 25);
-		frm.add(btnNewButton_8);
-
-		JButton btnNewButton_9 = new JButton("Join Game");
-		btnNewButton_9.setBounds(394, 247, 97, 25);
-		frm.add(btnNewButton_9);
-
-
+		btnJoinGame.setBounds(394, 55, 97, 25);
+		frm.add(btnJoinGame);
 	}
 }

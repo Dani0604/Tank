@@ -13,16 +13,44 @@ import TankGame.GameControl;
 import TankGame.GameState;
 import TankGame.Player;
 
+/**
+ * Szerver típusú hálózati kommunikációt megvalósító osztály
+ * @author Gyozo
+ *
+ */
 public class SerialServer extends Network {
 
-
+	/**
+	 * Ezen a socketen keresztül kommunikál az osztály.
+	 */
 	private ServerSocket serverSocket = null;
+	/**
+	 * A kliensek socketjeit tartalmazó lista.
+	 */
 	private ArrayList<Socket> clientSocket = null;
+	/**
+	 * A kliensekhez küldött adatok ezekbõl a listaelemekbõl kerülnek kiküldésre.
+	 */
 	private ArrayList<ObjectOutputStream> out = null;
+	/**
+	 * Kliensektõl erkezõ adatok ezekbe a listaelemekbe érkeznek.
+	 */
 	private ArrayList<ObjectInputStream> in = null;
+	/**
+	 * Különbözõ kliensektõl különbözõ szálakon fogadunk, ebben a listában találhatók ezek a szálak.
+	 */
 	private ArrayList<Thread> rec = null;
+	/**
+	 * A játék állapotát küldi a klienseknek.
+	 */
 	private PeriodicControl pc;
+	/**
+	 * Kliensekre várakozik.
+	 */
 	private Thread wc;
+	/**
+	 * A játék állapotát ismeri és számolja.
+	 */
 	GameControl gctrl;
 
 	public SerialServer(GameControl c) {
@@ -35,6 +63,10 @@ public class SerialServer extends Network {
 		rec = new ArrayList<Thread>();
 	}
 
+	/**
+	 * A játék állapotát az összes kliensnek elküldõ szál.
+	 * @author Horváth Gyõzõ
+	 */
 	private class PeriodicControl extends Thread {
 		@Override
 		public void run() {
@@ -51,8 +83,12 @@ public class SerialServer extends Network {
 		}
 	}
 
+	/**
+	 * Kliensek csatlakozását váró osztály.
+	 * @author Gyozo
+	 *
+	 */
 	private class WaitForClientThread implements Runnable{
-
 
 		public void run() {
 			
@@ -81,6 +117,12 @@ public class SerialServer extends Network {
 			
 		}
 	}
+	
+	/**
+	 * Egy adott klienstõl fogadja az ahhoz tartozó játékost.
+	 * @author Horváth Gyõzõ
+	 *
+	 */
 	private class ReceiverThread implements Runnable {
 
 		int num;
@@ -88,6 +130,7 @@ public class SerialServer extends Network {
 		public ReceiverThread(int n){
 			num = n;
 		}
+		
 		public void run() {
 
 			try {
@@ -106,6 +149,10 @@ public class SerialServer extends Network {
 		}
 	}
 
+	/**
+	 * Csatlakozik egy adott IP címre.
+	 * @param ip IP cím.
+	 */
 	@Override
 	public void connect(String ip) {
 		disconnect();
@@ -118,6 +165,9 @@ public class SerialServer extends Network {
 		}
 	}
 
+	/**
+	 * Lecsatlakozik a kliensekrõl.
+	 */
 	@Override
 	public void disconnect() {
 		try {
@@ -141,6 +191,10 @@ public class SerialServer extends Network {
 		}
 	}
 
+	/**
+	 * Játék aktuális állapotát küldi a klienseknek.
+	 * @param gameState
+	 */
 	public void send(GameState gameState){
 		if (out == null)
 			return;

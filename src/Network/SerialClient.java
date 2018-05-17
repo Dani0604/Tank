@@ -8,29 +8,35 @@ import GUI_Pack.GUI;
 import TankGame.GameState;
 import TankGame.Player;
 
-
+/**
+ * Kliens típusú hálózati kommunikációt megvalósító osztály.
+ * @author Horváth Gyõzõ
+ *
+ */
 public class SerialClient extends Network {
 
-
+	/**
+	 * Ezen a socketen keresztül kommunikál az osztály.
+	 */
 	private Socket socket = null;
+	/**
+	 * Adatok küldése itt történik.
+	 */
 	private ObjectOutputStream out = null;
+	/**
+	 * Adatok ide érkeznek.
+	 */
 	private ObjectInputStream in = null;
 	private GUI gui;
 
-
+	/**
+	 * Itt történik a térkép, illetve a pályaelemek fogadása.
+	 * @author Horváth Gyõzõ
+	 *
+	 */
 	private class ReceiverThread implements Runnable {
 
 		public void run() {
-			/*try {
-				System.out.println("Terkep fogadasa.");
-				ArrayList<Rectangle> received = (ArrayList<Rectangle>) in.readObject();
-				gui.mapReceived(received);
-				System.out.println("Map received.");
-			} catch (Exception ex) {
-				System.out.println(ex.getMessage());
-				System.err.println("Server disconnected!");
-			}
-			 */
 			GameState received;
 			try {
 				System.out.println("Tankok fogadasa.");
@@ -56,6 +62,10 @@ public class SerialClient extends Network {
 		}
 	}
 
+	/**
+	 * Adott IP címre csatlakozik.
+	 * @param ip IP cím
+	 */
 	@Override
 	public void connect(String ip) {
 		disconnect();
@@ -80,11 +90,11 @@ public class SerialClient extends Network {
 	public SerialClient(GUI gui){
 		this.gui = gui;
 	}
-	
-	public void startGame(){
-		
-	}
 
+	/**
+	 * Játékos küldése a szervernek.
+	 * @param _player Elküldendõ játékos.
+	 */
 	public void send(Player _player) {
 		if (out == null)
 			return;
@@ -99,6 +109,9 @@ public class SerialClient extends Network {
 		}
 	}
 
+	/**
+	 * Lecsatlakozás a szerverrõl.
+	 */
 	@Override
 	public void disconnect() {
 		try {

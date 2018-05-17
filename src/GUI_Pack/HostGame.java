@@ -8,20 +8,23 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JCheckBox;
-import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.JButton;
 
+/**
+ * Játék szoba létrehozásakor megjelenõ felület.
+ * @author Hegyi Sámuel
+ *
+ */
 public class HostGame {
 
 	public JFrame frm;
 
-	private JPasswordField passwordField;
-	private JTextField textField;
-	private JTextField textField_1;
-	private String Name="";
+	private JTextField playerNameTextField;
+	private JTextField gameNameTextField;
+	private JTextField maxPlayerTextField;
+	private String PlayerName="";
 	private String GameName="";
-	private String Password="";
 	private String max_p="";
 	private int MaxPlayer=1;
 	private boolean IsPowerUp=false;
@@ -29,7 +32,7 @@ public class HostGame {
 	public GUI gui;
 	
 	/**
-	 * Launch the application.
+	 * Elindítja az alkalmazást.
 	 */
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -45,7 +48,7 @@ public class HostGame {
 	}
 
 	/**
-	 * Initialize the contents of the frame.
+	 * Inicializálja a felület tartalmát.
 	 */
 	public HostGame(GUI gui) {
 		this.gui = gui;
@@ -61,13 +64,17 @@ public class HostGame {
 		panel.setLayout(null);
 		panel.setVisible(true);
 		
+		JLabel name = new JLabel("Game Name:");
+		name.setBounds(200, 70, 76, 26);
+		panel.add(name);
+		
 		JLabel gameName = new JLabel("Game Name:");
 		gameName.setBounds(200, 70, 76, 26);
 		panel.add(gameName);
 		
-		JLabel passw = new JLabel("Password (optional):");
-		passw.setBounds(200, 130, 122, 26);
-		panel.add(passw);
+		JLabel playerName = new JLabel("Player Name:");
+		playerName.setBounds(200, 130, 122, 26);
+		panel.add(playerName);
 		
 		JLabel maxPlayer = new JLabel("Maximum Number of Players:");
 		maxPlayer.setBounds(200, 190, 168, 26);
@@ -81,33 +88,36 @@ public class HostGame {
 		checkBox.setBounds(258, 247, 25, 25);
 		panel.add(checkBox);
 		
-		passwordField = new JPasswordField();
-		passwordField.setBounds(322, 132, 83, 22);
-		panel.add(passwordField);
+		gameNameTextField = new JTextField();
+		gameNameTextField.setBounds(277, 72, 127, 22);
+		panel.add(gameNameTextField);
+		gameNameTextField.setColumns(10);
 		
-		textField = new JTextField();
-		textField.setBounds(277, 72, 127, 22);
-		panel.add(textField);
-		textField.setColumns(10);
-		
-		textField_1 = new JTextField();
-		textField_1.setBounds(370, 192, 35, 22);
-		panel.add(textField_1);
-		textField_1.setColumns(10);
+		maxPlayerTextField = new JTextField();
+		maxPlayerTextField.setBounds(370, 192, 35, 22);
+		panel.add(maxPlayerTextField);
+		maxPlayerTextField.setColumns(10);
 		
 		JButton btnLobby = new JButton("Lobby");
 		btnLobby.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				int k=0;
-				if(textField.getText().equals("")) {
+				if(gameNameTextField.getText().equals("")) {
 					JOptionPane.showMessageDialog(null, "Please enter a game name!");
 				}
 				else {
-					GameName=textField.getText();
+					GameName=gameNameTextField.getText();
 					k=k+1;
 				}
-				char[] Password=passwordField.getPassword();
-				max_p=textField_1.getText();
+				if(playerNameTextField.getText().equals("")) {
+					JOptionPane.showMessageDialog(null, "Please enter a player name!");
+				}
+				else {
+					PlayerName=playerNameTextField.getText();
+					gui.setPlayerName(PlayerName);
+					k=k+1;
+				}
+				max_p=maxPlayerTextField.getText();
 				if(isInteger(max_p)) {
 					int mp=Integer.parseInt(max_p);
 					if(mp<1) {
@@ -123,10 +133,9 @@ public class HostGame {
 				}
 				IsPowerUp=checkBox.isSelected();
 				System.out.println(GameName);
-				System.out.println(Password);
 				System.out.println(MaxPlayer);
 				System.out.println(IsPowerUp);
-				if(k==2) {
+				if(k==3) {
 					gui.onEventStartGame();
 				}
 			}
@@ -138,9 +147,9 @@ public class HostGame {
 		lblGameName.setBounds(150, 70, 76, 26);
 		frm.getContentPane().add(lblGameName);
 		
-		JLabel lblPasswordoptional = new JLabel("Password (optional):");
-		lblPasswordoptional.setBounds(150, 125, 122, 26);
-		frm.getContentPane().add(lblPasswordoptional);
+		JLabel lblPlayerName = new JLabel("Player Name:");
+		lblPlayerName.setBounds(150, 125, 122, 26);
+		frm.getContentPane().add(lblPlayerName);
 		
 		JLabel lblMaximumNumberOf = new JLabel("Maximum number of Players:");
 		lblMaximumNumberOf.setBounds(150, 180, 168, 26);
@@ -154,24 +163,30 @@ public class HostGame {
 		isPowerUp.setBounds(217, 231, 25, 25);
 		frm.getContentPane().add(isPowerUp);
 		
-		passwordField = new JPasswordField();
-		passwordField.setBounds(272, 127, 83, 22);
-		frm.getContentPane().add(passwordField);
+		gameNameTextField = new JTextField();
+		gameNameTextField.setBounds(228, 72, 127, 22);
+		frm.getContentPane().add(gameNameTextField);
+		gameNameTextField.setColumns(10);
 		
-		textField = new JTextField();
-		textField.setBounds(228, 72, 127, 22);
-		frm.getContentPane().add(textField);
-		textField.setColumns(10);
+		playerNameTextField = new JTextField();
+		playerNameTextField.setBounds(228, 132, 127, 22);
+		frm.getContentPane().add(playerNameTextField);
+		playerNameTextField.setColumns(10);
 		
-		textField_1 = new JTextField();
-		textField_1.setBounds(320, 182, 35, 22);
-		frm.getContentPane().add(textField_1);
-		textField_1.setColumns(10);
+		maxPlayerTextField = new JTextField();
+		maxPlayerTextField.setBounds(320, 182, 35, 22);
+		frm.getContentPane().add(maxPlayerTextField);
+		maxPlayerTextField.setColumns(10);
 		
 		
 		frm.getContentPane().add(btnLobby);
 	}
 	
+	/**
+	 * Megadja, hogy a kapott sztring számot tartalmaz-e.
+	 * @param input String
+	 * @return
+	 */
 	public boolean isInteger(String input)
 	{
 	   try

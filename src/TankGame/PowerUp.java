@@ -1,28 +1,27 @@
 package TankGame;
 
-import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Stroke;
 import java.awt.geom.Area;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Point2D;
 
-import sl.shapes.StarPolygon;
+//import sl.shapes.StarPolygon;
 
+/**
+ * Power-up oszály.
+ * @author Szabó Dániel
+ *
+ */
 public class PowerUp extends Element{
 
-	/**
-	 * 
-	 */
 	final double VELOCITY = 1;
 	final int DIAMETER = 16;
 	final int STARRADIUS = 6;
 	final int INNERRADIUS = 3;
 	
 	private static final long serialVersionUID = -4196220458632733988L;
-	
 	
 	PowerUp(Map map){
 		velocity = VELOCITY;
@@ -39,13 +38,13 @@ public class PowerUp extends Element{
 	@Override
 	public void draw(Graphics g) {
 		Ellipse2D.Double circle = new Ellipse2D.Double(position.getX()-DIAMETER/2, position.getY()-DIAMETER/2, DIAMETER, DIAMETER);
-		StarPolygon SP = new StarPolygon((int)position.getX(), (int)position.getY(), STARRADIUS, INNERRADIUS, 5, orientation);
+		//StarPolygon SP = new StarPolygon((int)position.getX(), (int)position.getY(), STARRADIUS, INNERRADIUS, 5, orientation);
 		
 		Graphics2D g2d = (Graphics2D)g;
 		
 		g2d.setColor(Color.black);
 		g2d.draw(circle);
-		g2d.draw(SP);
+		//g2d.draw(SP);
 	}
 
 	@Override
@@ -63,9 +62,7 @@ public class PowerUp extends Element{
 	}
 
 	@Override
-	public void wallCollision(Map map) {
-		
-			
+	public void wallCollision(Map map) {	
 	}
 
 	@Override
@@ -81,7 +78,4 @@ public class PowerUp extends Element{
 			break;
 		}
 	}
-
-	
-
 }

@@ -8,15 +8,10 @@ package TankGame;
 import GUI_Pack.GUI;
 
 /**
- *
- * @author Predi
+ * TankTrouble++
+ * @author Hegyi Sámuel, Horváth Gyõzõ, Szabó Dániel
  */
 public class Main {
-
-	/**
-	 * @param args
-	 *            the command line arguments
-	 */
 
 	public static void main(String[] args) {
 		StateMachine SM = new StateMachine();

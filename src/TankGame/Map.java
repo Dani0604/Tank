@@ -8,18 +8,32 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Arrays;
 
+/**
+ * A Pályát megadó osztály.
+ * @author Szabó Dániel
+ *
+ */
 public class Map implements Serializable{
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -3563860244579098363L;
+	/**
+	 * Pálya vonalai.
+	 */
 	public  ArrayList<Rectangle> lines;
 	public ArrayList<Area> areas;
 	public final int MapHeight = 800;
 	public final int MapWidth = 800;
+	/**
+	 * Hány oszlopra bontjuk a térképet.
+	 */
 	private int ColumnNum = 10;
+	/**
+	 * Hány sorra bontjuk a térképet.
+	 */
 	private int RowNum = 10;
 
+	/**
+	 * A segítségével generáljuk a térképet.
+	 */
 	MazeGenerator mazegenerator;
 	
 	
@@ -36,6 +50,10 @@ public class Map implements Serializable{
 		save();
 	}
 
+	/**
+	 * Kirajzolja a térképet.
+	 * @param g Grafika.
+	 */
 	public void draw(Graphics g){
 		for (int i = 0; i < lines.size(); i++) { 
 			Rectangle r = lines.get(i);
@@ -43,6 +61,9 @@ public class Map implements Serializable{
 		}
 	}
 
+	/**
+	 * Elmenti a térképre generált éleket.
+	 */
 	public void save() {
 		for (int i = 0; i < mazegenerator.y; i++) {
 			// save the north edge
@@ -90,14 +111,15 @@ public class Map implements Serializable{
 				lines.add(l1);
 				areas.add(new Area(l1) );
 				l1 = null;
-			}
-			
+			}			
 		}
-
 	}
 
-
-	
+	/**
+	 * Labirintust generáló osztály.
+	 * @author Szabó Dániel
+	 *
+	 */
 	public static class MazeGenerator {
 		private final int x;
 		private final int y;
@@ -108,11 +130,14 @@ public class Map implements Serializable{
 			this.y = y;
 			maze = new int[this.x][this.y];
 			generateMaze(0, 0);
-			
-
 		}
 
-				private void generateMaze(int cx, int cy) {
+		/**
+		 * Generálja a labirintust.
+		 * @param cx Sor száma.
+		 * @param cy Oszlop száma.
+		 */
+		private void generateMaze(int cx, int cy) {
 			DIR[] dirs = DIR.values();
 			Collections.shuffle(Arrays.asList(dirs));
 			for (DIR dir : dirs) {
@@ -126,11 +151,22 @@ public class Map implements Serializable{
 				}
 			}
 		}
-
+		
+		/**
+		 * Megadja, hogy v 0 és upper közé esik-e.
+		 * @param v
+		 * @param upper
+		 * @return between
+		 */
 		private boolean between(int v, int upper) {
 			return (v >= 0) && (v < upper);
 		}
 
+		/**
+		 * ???
+		 * @author Szabó Dániel
+		 *
+		 */
 		private enum DIR {
 			N(1, 0, -1), S(2, 0, 1), E(4, 1, 0), W(8, -1, 0);
 			private final int bit;

@@ -10,18 +10,37 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+/**
+ * Lövedék osztály.
+ * @author Szabó Dániel
+ *
+ */
 public class Bullet extends Element implements Serializable {
 
-	/**
-	 * 
-	 */
 	protected static final long serialVersionUID = -2593081214538278025L;
+	/**
+	 * Lövedék sebessége.
+	 */
 	protected static final double VELOCITY = 210;
+	/**
+	 * Lövedék maximális megtett útja.
+	 */
 	protected static final double MAX_MOVE = 2000; 
+	/**
+	 * Lövedék által aktuálisan megtett út.
+	 */
 	protected double actMove = MAX_MOVE;
+	/**
+	 * Átmérõ.
+	 */
 	protected static final int DIAMETER = 7;
-	
+	/**
+	 * Melyik tank lõtte ki a lövedéket.
+	 */
 	protected Tank t;
+	/**
+	 * Maximálisan hányat lehet kilõni a lövedékbõl.
+	 */
 	protected static final int MAX_BULLETNUM = 5;
 
 
@@ -77,7 +96,10 @@ public class Bullet extends Element implements Serializable {
 
 	}
 
-	
+	/**
+	 * Lövedék kibocsátásakor kiszámolja annak az attribútumait, majd hozzáadja a pályán található objektumok listájához.
+	 * @param elements A pályán található objektumok listája.
+	 */
 	public void shoot(CopyOnWriteArrayList<Element> elements) {
 		if (t.bulletCounter < MAX_BULLETNUM) {
 			t.bulletCounter++;

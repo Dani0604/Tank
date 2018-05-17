@@ -5,18 +5,22 @@
 package Network;
 
 /**
- *
- * @author Predi
+ * Általános hálózati osztály.
+ * @author Horváth Gyõzõ
  */
 abstract class Network {
 
-	//protected MainControl mctrl;
+	public Network(){}
 	
-	public Network(){
-	}
-	
+	/**
+	 * Adott ip címre csatlakozik.
+	 * @param ip IP cím
+	 */
 	abstract public void connect(String ip);
 
+	/**
+	 * Lecsatlakozik a socketrõl.
+	 */
 	abstract public void disconnect();
 
 	

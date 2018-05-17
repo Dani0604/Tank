@@ -5,11 +5,13 @@ import java.awt.geom.Ellipse2D;
 import java.awt.geom.Point2D;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+/**
+ * Shotgun lövedék osztály, egyszerre több lövedéket lõ ki.
+ * @author Szabó Dániel
+ *
+ */
 public class Shotgun extends Bullet {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	public Shotgun(Tank t) {
@@ -35,7 +37,4 @@ public class Shotgun extends Bullet {
 			t.nextBullet = new Bullet(t);
 		
 	}
-
-
-
 }

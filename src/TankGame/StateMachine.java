@@ -2,6 +2,11 @@ package TankGame;
 
 import GUI_Pack.GUI;
 
+/**
+ * A menük megjelenítését vezérlõ állapotgép.
+ * @author Szabó Dániel
+ *
+ */
 public class StateMachine implements StateEventListener {
 	public State currentState = State.MainMenu;
 	private GUI gui;
@@ -12,6 +17,9 @@ public class StateMachine implements StateEventListener {
 		gui = g;
 	}
 
+	/**
+	 * Host Game gombra kattintás kezelése.
+	 */
 	@Override
 	public State onEventHostGame() {
 		// TODO Auto-generated method stub
@@ -27,6 +35,9 @@ public class StateMachine implements StateEventListener {
 		return currentState;
 	}
 
+	/**
+	 * Join Game gombra kattintás kezelése.
+	 */
 	@Override
 	public State onEventJoinGame() {
 		// TODO Auto-generated method stub
@@ -42,6 +53,9 @@ public class StateMachine implements StateEventListener {
 		return currentState;
 	}
 
+	/**
+	 * Start gombra kattintás kezelése.
+	 */
 	@Override
 	public State onEventStartGame() {
 		// TODO Auto-generated method stub
@@ -82,6 +96,9 @@ public class StateMachine implements StateEventListener {
 		return currentState;
 	}
 
+	/**
+	 * Cancel gombra kattintás kezelése.
+	 */
 	@Override
 	public State onEventCancel() {
 		switch (currentState){
@@ -109,6 +126,9 @@ public class StateMachine implements StateEventListener {
 		return currentState;
 	}
 
+	/**
+	 * Exit gombra kattintás kezelése.
+	 */
 	@Override
 	public State onEventExit() {
 		// TODO Auto-generated method stub

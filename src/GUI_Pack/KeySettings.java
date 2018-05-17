@@ -14,8 +14,13 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
+/**
+ * Az irányítás beállítását végzõ felület.
+ * @author Hegyi Sámuel
+ *
+ */
 public class KeySettings extends JDialog {
-
+	
 	private final JPanel contentPanel = new JPanel();
 	private JTextField textField;
 	private JTextField textField_1;
@@ -30,10 +35,11 @@ public class KeySettings extends JDialog {
 	private String Shoot="";
 
 	/**
-	 * Launch the application.
+	 * Elindítja az alkalmazást.
 	 */
 	public static void main(String[] args) {
 		try {
+			System.out.println("Itt");
 			KeySettings dialog = new KeySettings();
 			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 			dialog.setVisible(true);
@@ -42,10 +48,6 @@ public class KeySettings extends JDialog {
 		}
 	}
 
-
-	/**
-	 * Create the dialog.
-	 */
 	public KeySettings() {
 		frame=new JFrame();
 		frame.setTitle("Key Settings");
@@ -157,6 +159,9 @@ public class KeySettings extends JDialog {
 		}
 	}
 	
+	/**
+	 * ???
+	 */
 	public static void NewScreen() {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {

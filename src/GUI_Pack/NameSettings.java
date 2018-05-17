@@ -1,13 +1,17 @@
 package GUI_Pack;
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
-import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.border.EmptyBorder;
 import javax.swing.*;
 
+/**
+ * Név beállítására alkalmas felület.
+ * @author  Hegyi Sámuel
+ *
+ */
 public class NameSettings extends JDialog {
 
 	private final JPanel contentPanel = new JPanel();
@@ -16,7 +20,7 @@ public class NameSettings extends JDialog {
 	private String name;
 
 	/**
-	 * Launch the application.
+	 * Elindítja az alkalmazást
 	 */
 	public static void main(String[] args) {
 		try {
@@ -28,10 +32,6 @@ public class NameSettings extends JDialog {
 		}
 	}
 
-
-	/**
-	 * Create the dialog.
-	 */
 	public NameSettings() {
 		frame=new JFrame();
 		frame.getContentPane().setLayout(null);
