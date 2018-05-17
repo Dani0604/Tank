@@ -163,7 +163,7 @@ public class Map implements Serializable{
 		}
 
 		/**
-		 * ???
+		 * Adott fal irányát definiáló tipus.
 		 * @author Szabó Dániel
 		 *
 		 */

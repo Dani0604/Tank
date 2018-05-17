@@ -53,7 +53,7 @@ public class Player implements Serializable  {
 		Settings(){
 			name = "Default";
 			color = Color.WHITE;
-			ID = (int)(Math.random()*100000); //Használjuk???
+			ID = (int)(Math.random()*100000); 
 		}
 		
 		/**

@@ -159,9 +159,7 @@ public class KeySettings extends JDialog {
 		}
 	}
 	
-	/**
-	 * ???
-	 */
+
 	public static void NewScreen() {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
