@@ -57,45 +57,23 @@ public class JoinGame {
 		panel.setLayout(null);
 		panel.setVisible(true);
 
-		JButton btnRefresh = new JButton("Refresh");
-		btnRefresh.setBounds(340, 320, 165, 50);
-		frm.add(btnRefresh);
-
-		JLabel lblName = new JLabel("Name");
-		lblName.setBounds(26, 26, 56, 16);
-		frm.add(lblName);
-
-		JLabel lblIpAddress = new JLabel("IP address:");
-		lblIpAddress.setBounds(26, 285, 66, 16);
-		frm.add(lblIpAddress);
-
-		/////////////////!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-		//GameNames={"WoW", "AoH", "OP"};
-		JList<String> list = new JList<String>();
-		list.setModel(new AbstractListModel<String>() {
-			/**
-			 * 
-			 * 
-			 */
-			private static final long serialVersionUID = 1L;
-			String[] values = new String[] {"WoW", "AoH", "OP", "NomenEstOmen", "Gamers", "Popcorn", "VIK", "KiKKer's", "Last but not least"};
-			public int getSize() {
-				return values.length;
-			}
-			public String getElementAt(int index) {
-				return values[index];
+		JButton btnRefresh = new JButton("Cancel");
+		btnRefresh.setBounds(107, 240, 165, 50);
+		btnRefresh.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				gui.onEventCancel();
 			}
 		});
-		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		list.setLayoutOrientation(JList.HORIZONTAL_WRAP);
-		list.setVisibleRowCount(-1);
-		list.setFont(new Font("Tahoma", Font.PLAIN, 17));
-		list.setToolTipText("Name of Games:");
-		list.setBounds(26, 55, 239, 217);
-		frm.add(list);
+		frm.add(btnRefresh);
+
+		JLabel lblIpAddress = new JLabel("IP address");
+		lblIpAddress.setBounds(273, 100, 66, 16);
+		frm.add(lblIpAddress);
+
+
 
 		textField_2 = new JTextField();
-		textField_2.setBounds(88, 282, 219, 22);
+		textField_2.setBounds(196, 120, 220, 22);
 		// Listen for changes in the text
 		textField_2.getDocument().addDocumentListener(new DocumentListener() {
 			@Override
@@ -127,7 +105,7 @@ public class JoinGame {
 				gui.onEventStartGame();
 			}
 		});
-		btnJoinGame.setBounds(394, 55, 97, 25);
+		btnJoinGame.setBounds(340, 240, 165, 50);
 		frm.add(btnJoinGame);
 	}
 }

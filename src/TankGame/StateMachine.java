@@ -109,7 +109,6 @@ public class StateMachine implements StateEventListener {
 			gui.hostGame.frm.setVisible(false);
 			break;
 		case JoinGame:
-			gui.closeClient();
 			gui.mainmenu.frm.setVisible(true);
 			gui.joinGame.frm.setVisible(false);
 			break;
