@@ -48,6 +48,7 @@ public class GameState implements Serializable{
 	 * @throws IOException IO kivétel.
 	 * @throws ClassNotFoundException Ismeretlen osztály kivétel.
 	 */
+	@SuppressWarnings("unchecked")
 	private void readObject(java.io.ObjectInputStream stream) throws IOException, ClassNotFoundException{
 		state = (State)stream.readObject();
 		elements = (CopyOnWriteArrayList<Element>)stream.readObject();

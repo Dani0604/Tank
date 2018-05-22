@@ -21,8 +21,8 @@ public class MainMenu {
 	public JFrame frm;
 	public JPanel panel;
 	
-	public MainMenu(GUI gui){
-		this.gui= gui;
+	public MainMenu(GUI _gui){
+		this.gui= _gui;
 		frm = new JFrame();
 		frm.setTitle("Work of Tanks");
 		frm.setBounds(100, 100, 612, 460);
@@ -69,19 +69,10 @@ public class MainMenu {
 		JMenu mnNewMenu = new JMenu("Settings");
 		menuBar.add(mnNewMenu);
 		
-		JMenuItem mntmNewMenuItem = new JMenuItem("Name Settings");
-		mntmNewMenuItem.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				NameSettings ns=new NameSettings();
-				ns.NewScreen();
-			}
-		});
-		mnNewMenu.add(mntmNewMenuItem);
-		
 		JMenuItem mntmKeySettings = new JMenuItem("Control Settings");
 		mntmKeySettings.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				KeySettings ks=new KeySettings();
+				KeySettings ks=new KeySettings(gui);
 				ks.NewScreen();
 			}
 		});

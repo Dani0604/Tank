@@ -69,6 +69,10 @@ public class GUI implements StateEventListener {
 	 * Kirajzolja a pályát adott idõközönként.
 	 */
 	private PeriodicDrawer pd;
+	/**
+	 * Küldi a játékost a szervernek adott idõközönként.
+	 */
+	private PeriodicPlayerUpdater ppu;
 	
 	/**
 	 * Fõmenü felhasználói felület.
@@ -97,21 +101,14 @@ public class GUI implements StateEventListener {
 	 *
 	 */
 	public class PeriodicDrawer extends Thread {
-		@Override
+		public boolean stopThread = false;
+
 		public void run() {
-			double old_time = 0;
-			while (true) {
+			while (!stopThread) {
 				drawPanel.repaint();
 				try {
 					Thread.sleep(10);
-					double new_time;
-					new_time = System.currentTimeMillis();
-					double delta = new_time - old_time;
-					//double fps = 1 / (delta / 1000);
-					old_time = new_time;
-					// System.out.println(fps);
 				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
@@ -124,17 +121,16 @@ public class GUI implements StateEventListener {
 	 *
 	 */
 	public class PeriodicPlayerUpdater extends Thread {
+		public boolean stopThread = false;
 		@Override
 		public void run() {
 			client.connect(Serverip);
-			while (true) {
+			while (!stopThread) {
 				try {
-					Thread.sleep(5);
-					//System.out.println(player.controls.moveForward);
+					Thread.sleep(10);
 					send(player);
 				}
 				catch (InterruptedException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
@@ -173,50 +169,44 @@ public class GUI implements StateEventListener {
 		//TODO általános billentyûkombinációk
 		public void keyReleased(KeyEvent e) {
 			int keyCode = e.getKeyCode();
-			switch (keyCode) {
-			case KeyEvent.VK_UP:
+			if(keyCode == player.controls.moveForwardBtnKey){			
 				player.controls.moveForward = false;
-				break;
-			case KeyEvent.VK_DOWN:
-				// handle down
+				}
+			else if(keyCode == player.controls.moveBackwardBtnKey){
 				player.controls.moveBackward = false;
-				break;
-			case KeyEvent.VK_LEFT:
+				}
+			else if(keyCode == player.controls.turnLeftBtnKey){
 				player.controls.turnLeft = false;
-				break;
-			case KeyEvent.VK_RIGHT:
-				// handle right
+				}
+			else if(keyCode == player.controls.turnRightBtnKey){
 				player.controls.turnRight = false;
-				break;
-			case KeyEvent.VK_SPACE:
+				}
+			else if(keyCode == player.controls.shootBtnKey){
 				player.controls.shoot = false;
-				break;
-			}
+				}
 		}
 
 		@Override
 		//TODO általános billentyûkombinációk
 		public void keyPressed(KeyEvent e) {
 			int keyCode = e.getKeyCode();
-			switch (keyCode) {
-			case KeyEvent.VK_UP:
+			System.out.println("lenyomott bill: " + keyCode);
+			System.out.println("Várt bill: " + player.controls.turnLeftBtnKey);
+			if(keyCode == player.controls.moveForwardBtnKey){			
 				player.controls.moveForward = true;
-				break;
-			case KeyEvent.VK_DOWN:
-				// handle down
+				}
+			else if(keyCode == player.controls.moveBackwardBtnKey){
 				player.controls.moveBackward = true;
-				break;
-			case KeyEvent.VK_LEFT:
+				}
+			else if(keyCode == player.controls.turnLeftBtnKey){
 				player.controls.turnLeft = true;
-				break;
-			case KeyEvent.VK_RIGHT:
-				// handle right
+				}
+			else if(keyCode == player.controls.turnRightBtnKey){
 				player.controls.turnRight = true;
-				break;
-			case KeyEvent.VK_SPACE:
+				}
+			else if(keyCode == player.controls.shootBtnKey){
 				player.controls.shoot = true;
-				break;
-			}
+				}
 		}
 	}
 
@@ -280,18 +270,19 @@ public class GUI implements StateEventListener {
 		if(client != null){
 			client.disconnect();
 		}
-
+		
 		client = new SerialClient(this);
 		Serverip = ip;
 
-		Thread networkthread = new PeriodicPlayerUpdater();
-		networkthread.start();
+		ppu = new PeriodicPlayerUpdater();
+		ppu.start();
 	}
 
 	/**
 	 * Lecsatlakozik a szerverrõl, bezárja a socketet.
 	 */
 	public void closeClient(){
+		client.stopThreads();
 		client.disconnect();
 	}
 
@@ -379,5 +370,71 @@ public class GUI implements StateEventListener {
 	public State onEventExit() {
 		this.SM.onEventExit();
 		return this.SM.currentState;
+	}
+
+	/**
+	 * Beállítja az elõre mozgás billentyûjét.
+	 * @param keyCode Elõre mozgás billentyûjének kódja
+	 */
+	public void setForwardBtnKey(int _keyCode) {
+		player.controls.moveForwardBtnKey = _keyCode;
+	}
+
+	/**
+	 * Beállítja a hátra mozgás billentyûjét.
+	 * @param keyCode Hátra mozgás billentyûjének kódja
+	 */
+	public void setBwdBtnKey(int _keyCode) {
+		player.controls.moveBackwardBtnKey = _keyCode;
+	}
+
+	/**
+	 * Beállítja a jobbra fordulás billentyûjét.
+	 * @param keyCode Jobbra fordulás billentyûjének kódja
+	 */
+	public void setRightBtnKey(int _keyCode) {
+		player.controls.turnRightBtnKey = _keyCode;
+	}
+	
+	/**
+	 * Beállítja a balra fordulás billentyûjét.
+	 * @param keyCode Balra fordulás billentyûjének kódja
+	 */
+	public void setLeftBtnKey(int _keyCode) {
+		player.controls.turnLeftBtnKey = _keyCode;
+	}
+	
+	/**
+	 * Beállítja a lövés billentyûjét.
+	 * @param keyCode Lövés billentyûjének kódja
+	 */
+	public void setShootBtnKey(int _keyCode) {
+		player.controls.shootBtnKey = _keyCode;
+	}
+
+	/**
+	 * Leállítja a GUI szálait
+	 */
+	public void stopThreads() {
+		if(pd != null){		
+			try {
+				pd.stopThread = true;
+				pd.join();
+				pd.stopThread = false;
+			}
+			catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+		if(ppu != null){
+			try {
+				ppu.stopThread = true;
+				ppu.join();
+				ppu.stopThread = false;
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 	}
 }

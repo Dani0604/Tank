@@ -66,11 +66,10 @@ public class StateMachine implements StateEventListener {
 			gui.lobby.btnStart.setVisible(true);
 			gctrl = new GameControl(this);
 			//gctrl.startGame();
-			gctrl.startServer();
 			gui.startClient("localhost");
 			break;
 		case JoinGame:
-			gui.startClient(gui.joinGame.textField_2.getText());
+			gui.startClient(gui.joinGame.IPAddress.getText());
 			gui.lobby.frm.setVisible(true);
 			gui.joinGame.frm.setVisible(false);
 			gui.lobby.btnStart.setVisible(false);
@@ -103,8 +102,8 @@ public class StateMachine implements StateEventListener {
 	public State onEventCancel() {
 		switch (currentState){
 		case HostGame:
-			gctrl.closeServer();
-			gui.closeClient();
+			//gctrl.closeServer();
+			//gui.closeClient();
 			gui.mainmenu.frm.setVisible(true);
 			gui.hostGame.frm.setVisible(false);
 			break;
@@ -113,8 +112,10 @@ public class StateMachine implements StateEventListener {
 			gui.joinGame.frm.setVisible(false);
 			break;
 		case LobbyHost:
-			gctrl.closeServer();
+			gui.stopThreads();
 			gui.closeClient();
+			gctrl.stopThreads();
+			gctrl.closeServer();
 			gui.mainmenu.frm.setVisible(true);
 			gui.lobby.frm.setVisible(false);
 			break;

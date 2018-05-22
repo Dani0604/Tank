@@ -3,6 +3,8 @@ import java.awt.Color;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 import javax.swing.JFrame;
 import javax.swing.JButton;
@@ -26,11 +28,17 @@ public class Lobby {
 
 	public JFrame frm;
 	private GUI gui;
+	/**
+	 * Játékosok listája
+	 */
 	public JList<String> list;
+	/**
+	 * A játékot indító gomb.
+	 */
 	public JButton btnStart;
 	
 	/**
-	 * Elindítja az alkalmazást.
+	 * Megnyitja a felületet.
 	 */
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -45,43 +53,16 @@ public class Lobby {
 		});
 	}
 
-	public Lobby(GUI gui){
-		this.gui= gui;
+	public Lobby(GUI _gui){
+		this.gui= _gui;
 		frm = new JFrame();
 		frm.setTitle("Lobby");
 		frm.setBounds(100, 100, 612, 460);
 		frm.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frm.getContentPane().setLayout(null);
 		frm.setVisible(false);
-
-		JButton btnNewButton = new JButton("Main Menu");
-		btnNewButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				
-			}
-		});
-		btnNewButton.setBounds(25, 340, 165, 50);
-		frm.getContentPane().add(btnNewButton);
-
-		JButton btnNewButton_1 = new JButton("Ready");
-		btnNewButton_1.setBounds(215, 340, 165, 50);
-		btnNewButton_1.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				gui.onEventJoinGame();
-			}
-		});
-		frm.getContentPane().add(btnNewButton_1);
-
-		btnStart = new JButton("Start");
-		btnStart.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				gui.onEventStartGame();
-			}
-		});
-		btnStart.setBounds(405, 340, 165, 50);
-		frm.getContentPane().add(btnStart);
 		
-
+		//Várakozó játékosok listája
 		JLabel lblPlayers = new JLabel("Players");
 		lblPlayers.setBounds(25, 25, 56, 16);
 		frm.getContentPane().add(lblPlayers);
@@ -89,13 +70,11 @@ public class Lobby {
 		list = new JList<String>();
 		list.setFont(new Font("Tahoma", Font.PLAIN, 17));
 		list.setModel(new AbstractListModel<String>() {
-
+			private static final long serialVersionUID = 1L;
 			@Override
 			public String getElementAt(int arg0) {
 				return gui.players.get(arg0).settings.name;
-				
 			}
-
 			@Override
 			public int getSize() {
 				// TODO Auto-generated method stub
@@ -104,61 +83,35 @@ public class Lobby {
 				else 
 					return gui.players.size();
 			}
-
 		});
-		list.setBounds(25, 50, 120, 277);
+		list.setBounds(25, 50, 125, 150);
 		frm.getContentPane().add(list);
-
-		JPanel panel = new JPanel();
-		panel.setBounds(145, 55, 16, 16);
-		panel.setBackground(Color.WHITE);
-		frm.getContentPane().add(panel);
-
-		JPanel panel_1 = new JPanel();
-		panel_1.setBounds(145, 78, 16, 16);
-		panel_1.setBackground(Color.BLACK);
-		frm.getContentPane().add(panel_1);
-
-		JPanel panel_2 = new JPanel();
-		panel_2.setBounds(145, 101, 16, 16);
-		panel_2.setBackground(Color.ORANGE);
-		frm.getContentPane().add(panel_2);
-
-		JPanel panel_3 = new JPanel();
-		panel_3.setBounds(145, 124, 16, 16);
-		panel_3.setBackground(Color.GREEN);
-		frm.getContentPane().add(panel_3);
-
-		JPanel panel_4 = new JPanel();
-		panel_4.setBounds(145, 147, 16, 16);
-		panel_4.setBackground(Color.BLUE);
-		frm.getContentPane().add(panel_4);
-
-		JPanel panel_5 = new JPanel();
-		panel_5.setBounds(145, 170, 16, 16);
-		frm.getContentPane().add(panel_5);
-
-		JPanel panel_6 = new JPanel();
-		panel_6.setBounds(145, 193, 16, 16);
-		frm.getContentPane().add(panel_6);
-
-		JPanel panel_7 = new JPanel();
-		panel_7.setBounds(145, 216, 16, 16);
-		frm.getContentPane().add(panel_7);
-
-		JPanel panel_8 = new JPanel();
-		panel_8.setBounds(396, 25, 25, 25);
-		frm.getContentPane().add(panel_8);
-
+		
+		String ip = "IP";
+        try {
+            InetAddress ipAddr = InetAddress.getLocalHost();
+            ip = ipAddr.getHostAddress();
+        } catch (UnknownHostException ex) {
+            ex.printStackTrace();
+        }
+		JLabel lblIP = new JLabel("Your IP: " + ip);
+		lblIP.setBounds(25, 170, 180, 190);
+		frm.getContentPane().add(lblIP);
+		
+		//Szín kiválasztása
 		JLabel lblSelectColor = new JLabel("Select Color");
 		lblSelectColor.setBounds(315, 25, 81, 16);
 		frm.getContentPane().add(lblSelectColor);
+		
+		JPanel colorpanel = new JPanel();
+		colorpanel.setBounds(396, 25, 25, 25);
+		frm.getContentPane().add(colorpanel);
 
 		JRadioButton rdbtnRed = new JRadioButton("Red");
 		rdbtnRed.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				panel_8.setVisible(true);
-				panel_8.setBackground(Color.RED);
+				colorpanel.setBackground(Color.RED);
+				colorpanel.setVisible(true);
 				gui.setPlayerColor(Color.RED);
 			}
 		});
@@ -168,8 +121,8 @@ public class Lobby {
 		JRadioButton rdbtnBlue = new JRadioButton("Blue");
 		rdbtnBlue.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				panel_8.setVisible(true);
-				panel_8.setBackground(Color.BLUE);
+				colorpanel.setBackground(Color.BLUE);
+				colorpanel.setVisible(true);
 				gui.setPlayerColor(Color.BLUE);
 			}
 		});
@@ -179,8 +132,8 @@ public class Lobby {
 		JRadioButton rdbtnGreen = new JRadioButton("Green");
 		rdbtnGreen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				panel_8.setVisible(true);
-				panel_8.setBackground(Color.GREEN);
+				colorpanel.setBackground(Color.GREEN);
+				colorpanel.setVisible(true);
 				gui.setPlayerColor(Color.GREEN);
 			}
 		});
@@ -190,8 +143,8 @@ public class Lobby {
 		JRadioButton rdbtnYellow = new JRadioButton("Yellow");
 		rdbtnYellow.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				panel_8.setVisible(true);
-				panel_8.setBackground(Color.YELLOW);
+				colorpanel.setBackground(Color.YELLOW);
+				colorpanel.setVisible(true);
 				gui.setPlayerColor(Color.YELLOW);
 			}
 		});
@@ -201,8 +154,8 @@ public class Lobby {
 		JRadioButton rdbtnOrange = new JRadioButton("Orange");
 		rdbtnOrange.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				panel_8.setVisible(true);
-				panel_8.setBackground(Color.ORANGE);
+				colorpanel.setBackground(Color.ORANGE);
+				colorpanel.setVisible(true);
 				gui.setPlayerColor(Color.ORANGE);
 			}
 		});
@@ -212,8 +165,8 @@ public class Lobby {
 		JRadioButton rdbtnPurple = new JRadioButton("Purple");
 		rdbtnPurple.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				panel_8.setVisible(true);
-				panel_8.setBackground(Color.MAGENTA);
+				colorpanel.setBackground(Color.MAGENTA);
+				colorpanel.setVisible(true);
 				gui.setPlayerColor(Color.MAGENTA);
 			}
 		});
@@ -223,8 +176,8 @@ public class Lobby {
 		JRadioButton rdbtnBlack = new JRadioButton("Black");
 		rdbtnBlack.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				panel_8.setVisible(true);
-				panel_8.setBackground(Color.BLACK);
+				colorpanel.setBackground(Color.BLACK);
+				colorpanel.setVisible(true);
 				gui.setPlayerColor(Color.BLACK);
 			}
 		});
@@ -234,8 +187,8 @@ public class Lobby {
 		JRadioButton rdbtnWhite = new JRadioButton("White");
 		rdbtnWhite.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				panel_8.setVisible(true);
-				panel_8.setBackground(Color.WHITE);
+				colorpanel.setBackground(Color.WHITE);
+				colorpanel.setVisible(true);
 				gui.setPlayerColor(Color.WHITE);
 			}
 		});
@@ -251,14 +204,34 @@ public class Lobby {
 		group.add(rdbtnPurple);
 		group.add(rdbtnBlack);
 		group.add(rdbtnWhite);
-
-		JLabel lblReady = new JLabel("Ready");
-		lblReady.setBounds(197, 25, 56, 16);
-		frm.getContentPane().add(lblReady);
-		/*rdbtnRed.addActionListener(this);
-		blue.addActionListener(this);
-		green.addActionListener(this);*/
-	}
-
-
+		
+		
+		//Gombok
+		JButton btnNewButton = new JButton("Main Menu");
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				gui.onEventCancel();
+				}
+			});
+		btnNewButton.setBounds(25, 340, 165, 50);
+		frm.getContentPane().add(btnNewButton);
+		
+		JButton readyButton = new JButton("Ready");
+		readyButton.setBounds(205, 340, 165, 50);
+		readyButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				gui.onEventJoinGame();
+				}
+			});
+		frm.getContentPane().add(readyButton);
+				
+		btnStart = new JButton("Start");
+		btnStart.setBounds(405, 340, 165, 50);
+		btnStart.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				gui.onEventStartGame();
+				}
+			});
+		frm.getContentPane().add(btnStart);
+		}
 }

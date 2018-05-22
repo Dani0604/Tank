@@ -24,6 +24,10 @@ public class GameControl {
 	 */
 	public CopyOnWriteArrayList<Player> players;
 	/**
+	 * A játék állapotát számítja adott idõközönként.
+	 */
+	private PeriodicControl pc;
+	/**
 	 * A mintavételi idõ - ekkora idõközönként számolja ki az osztály az objektumok pozícióját.
 	 */
 	private static final double T = 10;
@@ -85,6 +89,8 @@ public class GameControl {
 	 * Szerversocket leállítása.
 	 */
 	public void closeServer(){
+		
+		server.stopThreads();
 		server.disconnect();
 	}
 	
@@ -101,24 +107,18 @@ public class GameControl {
 	 * @author Szabó Dániel
 	 *
 	 */
-	private class PeriodicControl extends Thread {
+	public class PeriodicControl extends Thread {
+		public boolean stopThread = false;
 		@Override
 		public void run() {
 			double prevTime = System.nanoTime();
 			double currentTime;
 			double waitTime = GAME_END_WAIT_TIME;
-			while (true) {
+			while (!stopThread) {
 				if (currentStateIsGame()){
 				currentTime = System.nanoTime();
 				double deltaT = (currentTime - prevTime)/1000000;
-				
-				//System.out.println(deltaT);
-				prevTime = currentTime;
-				
-				//System.out.println(players.size());
-				//System.out.println(elements.size());
-				//Játékosoktól érkezõ vezérlések
-				
+				prevTime = currentTime;	
 				if (map == null)
 					map = new Map();
 				for (int i = 0; i < players.size(); i++) {
@@ -204,8 +204,8 @@ public class GameControl {
 		gameState = new GameState();
 		gameState.state = SM.currentState;
 		startServer();
-		Thread t = new PeriodicControl();
-		t.start();
+		pc = new PeriodicControl();
+		pc.start();
 	}
 	
 	/**
@@ -241,5 +241,16 @@ public class GameControl {
 		if (_player.settings.name.equals("Default"))
 			_player.settings.name = "Player" + i;
 		players.add(_player);
+	}
+
+	public void stopThreads() {
+		try {
+			pc.stopThread = true;
+			pc.join();
+			pc.stopThread = true;
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }

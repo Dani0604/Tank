@@ -11,7 +11,6 @@ import javax.swing.JPanel;
 import javax.swing.JFrame;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
 /**
@@ -20,19 +19,16 @@ import javax.swing.JTextField;
  *
  */
 public class KeySettings extends JDialog {
-	
+
+	private static final long serialVersionUID = 1L;
+	static GUI gui; //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	private final JPanel contentPanel = new JPanel();
-	private JTextField textField;
-	private JTextField textField_1;
-	private JTextField textField_2;
-	private JTextField textField_3;
-	private JTextField textField_4;
+	private JTextField fwdTextField;
+	private JTextField bwdTextField;
+	private JTextField rightTextField;
+	private JTextField leftTextField;
+	private JTextField shootTextField;
 	private JFrame frame;
-	private String Up="";
-	private String Down="";
-	private String Right="";
-	private String Left="";
-	private String Shoot="";
 
 	/**
 	 * Elindítja az alkalmazást.
@@ -40,7 +36,7 @@ public class KeySettings extends JDialog {
 	public static void main(String[] args) {
 		try {
 			System.out.println("Itt");
-			KeySettings dialog = new KeySettings();
+			KeySettings dialog = new KeySettings(gui);
 			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 			dialog.setVisible(true);
 		} catch (Exception e) {
@@ -48,7 +44,8 @@ public class KeySettings extends JDialog {
 		}
 	}
 
-	public KeySettings() {
+	public KeySettings(GUI _gui) {
+		gui = _gui;
 		frame=new JFrame();
 		frame.setTitle("Key Settings");
 		frame.setBounds(100, 100, 320, 320);
@@ -87,58 +84,121 @@ public class KeySettings extends JDialog {
 			contentPanel.add(lblShoot);
 		}
 		{
-			textField = new JTextField();
-			textField.setBounds(36, 51, 25, 22);
-			contentPanel.add(textField);
-			textField.setColumns(10);
+			fwdTextField = new JTextField();
+			fwdTextField.setBounds(36, 51, 25, 22);
+			contentPanel.add(fwdTextField);
+			fwdTextField.setColumns(10);
 		}
 		{
-			textField_1 = new JTextField();
-			textField_1.setBounds(52, 91, 25, 22);
-			contentPanel.add(textField_1);
-			textField_1.setColumns(10);
+			bwdTextField = new JTextField();
+			bwdTextField.setBounds(52, 91, 25, 22);
+			contentPanel.add(bwdTextField);
+			bwdTextField.setColumns(10);
 		}
 		{
-			textField_2 = new JTextField();
-			textField_2.setBounds(49, 137, 25, 22);
-			contentPanel.add(textField_2);
-			textField_2.setColumns(10);
+			rightTextField = new JTextField();
+			rightTextField.setBounds(49, 137, 25, 22);
+			contentPanel.add(rightTextField);
+			rightTextField.setColumns(10);
 		}
 		{
-			textField_3 = new JTextField();
-			textField_3.setBounds(42, 175, 25, 22);
-			contentPanel.add(textField_3);
-			textField_3.setColumns(10);
+			leftTextField = new JTextField();
+			leftTextField.setBounds(42, 175, 25, 22);
+			contentPanel.add(leftTextField);
+			leftTextField.setColumns(10);
 		}
 		{
-			textField_4 = new JTextField();
-			textField_4.setBounds(52, 214, 25, 22);
-			contentPanel.add(textField_4);
-			textField_4.setColumns(10);
+			shootTextField = new JTextField();
+			shootTextField.setBounds(52, 214, 25, 22);
+			contentPanel.add(shootTextField);
+			shootTextField.setColumns(10);
 		}
 		
 		JButton btnNewButton = new JButton("Ok");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				Up=textField.getText();
-				if(Up.length()!=1)
-					JOptionPane.showMessageDialog(null, "Wrong input! Please enter only one key!");
-				Down=textField_1.getText();
-				if(Down.length()!=1)
-					JOptionPane.showMessageDialog(null, "Wrong input! Please enter only one key!");
-				Right=textField_2.getText();
-				if(Right.length()!=1)
-					JOptionPane.showMessageDialog(null, "Wrong input! Please enter only one key!");
-				Left=textField_3.getText();
-				if(Left.length()!=1)
-					JOptionPane.showMessageDialog(null, "Wrong input! Please enter only one key!");
-				Shoot=textField_4.getText();
-				if(Shoot.length()!=1)
-					JOptionPane.showMessageDialog(null, "Wrong input! Please enter only one key!");
-				if(Up.length()+Down.length()+Right.length()+Left.length()+Shoot.length()==5)
+				//elõre mozgás gomb beállítása
+				String strFw= fwdTextField.getText();
+				if(strFw.length() > 0){
+					int code = Character.codePointAt(strFw, 0);
+					code = ascii2keycode(code);
+					System.out.println(code);
+					gui.setForwardBtnKey(code);
+				}
+				else{
+					//JOptionPane.showMessageDialog(null, "Wrong input! Please enter only one key!");
+				}
+				//hátra mozgás gomb beállítása
+				String strBw=bwdTextField.getText();
+				if(strBw.length() > 0){
+					int code = Character.codePointAt(strBw, 0);
+					code = ascii2keycode(code);
+					System.out.println(code);
+					gui.setBwdBtnKey(code);
+				}
+				else{
+					//JOptionPane.showMessageDialog(null, "Wrong input! Please enter only one key!");
+				}
+				//jobbra fordulás gomb beállítása
+				String strRg=rightTextField.getText();
+				if(strRg.length() > 0){
+					int code = Character.codePointAt(strRg, 0);
+					code = ascii2keycode(code);
+					System.out.println(code);
+					gui.setRightBtnKey(code);
+				}
+				else{
+					//JOptionPane.showMessageDialog(null, "Wrong input! Please enter only one key!");
+				}
+				//balra fordulás gomb beállítása
+				String strLf=leftTextField.getText();
+				if(strLf.length() > 0){
+					int code = Character.codePointAt(strLf, 0);
+					code = ascii2keycode(code);
+					System.out.println(code);
+					gui.setLeftBtnKey(code);
+				}
+				else{
+					//JOptionPane.showMessageDialog(null, "Wrong input! Please enter only one key!");
+				}
+				String strSh=shootTextField.getText();
+				if(strSh.length() > 0){
+					int code = Character.codePointAt(strSh, 0);
+					code = ascii2keycode(code);
+					System.out.println(code);
+					gui.setShootBtnKey(code);
+				}
+				else{
+					//JOptionPane.showMessageDialog(null, "Wrong input! Please enter only one key!");
+				}
+				
+				
+				if(strFw.length()+strBw.length()+strRg.length()+strLf.length()+strSh.length() > 0)
 					frame.dispose();
 			}
+
+			private int ascii2keycode(int _code) {
+				int ret = -1;
+				if(_code == 97){ //a
+					ret = 65;
+				}
+				else if(_code == 115){ //s
+					ret = 83;
+				}
+				else if(_code == 119){ //w
+					ret = 87;
+				}
+				else if(_code == 100){ //d
+					ret = 68;
+				}
+				else if(_code == 103){ //g
+					ret = 71;
+				}
+				return ret;
+			}
 		});
+		
+		
 		btnNewButton.setBounds(127, 205, 100, 40);
 		contentPanel.add(btnNewButton);
 		{
@@ -160,11 +220,11 @@ public class KeySettings extends JDialog {
 	}
 	
 
-	public static void NewScreen() {
+	public void NewScreen() {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					KeySettings window = new KeySettings();
+					KeySettings window = new KeySettings(gui);
 					window.frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();

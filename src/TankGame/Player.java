@@ -1,6 +1,7 @@
 package TankGame;
 
 import java.awt.Color;
+import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.io.Serializable;
 
@@ -23,19 +24,23 @@ public class Player implements Serializable  {
 		private static final long serialVersionUID = 1L;
 		public boolean turnLeft;
 		public boolean turnLeft_old;
+		public int turnLeftBtnKey = KeyEvent.VK_LEFT;
 
 		public boolean turnRight;
 		public boolean turnRight_old;
-
+		public int turnRightBtnKey = KeyEvent.VK_RIGHT;
+		
 		public boolean moveForward;
 		public boolean moveForward_old;
+		public int moveForwardBtnKey = KeyEvent.VK_UP;
 		
 		public boolean moveBackward;
 		public boolean moveBackward_old;
-
+		public int moveBackwardBtnKey = KeyEvent.VK_DOWN;
+		
 		public boolean shoot;
 		public boolean shoot_old;
-
+		public int shootBtnKey = KeyEvent.VK_SPACE;
 	};
 	
 	/**

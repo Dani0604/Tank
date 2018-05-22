@@ -15,7 +15,7 @@ import TankGame.Player;
 
 /**
  * Szerver típusú hálózati kommunikációt megvalósító osztály
- * @author Gyozo
+ * @author Horváth Gyõzõ
  *
  */
 public class SerialServer extends Network {
@@ -39,15 +39,15 @@ public class SerialServer extends Network {
 	/**
 	 * Különbözõ kliensektõl különbözõ szálakon fogadunk, ebben a listában találhatók ezek a szálak.
 	 */
-	private ArrayList<Thread> rec = null;
+	private ArrayList<ReceiverThread> rec = null;
 	/**
 	 * A játék állapotát küldi a klienseknek.
 	 */
-	private PeriodicControl pc;
+	public PeriodicControl pc;
 	/**
 	 * Kliensekre várakozik.
 	 */
-	private Thread wc;
+	private WaitForClientThread wc;
 	/**
 	 * A játék állapotát ismeri és számolja.
 	 */
@@ -60,17 +60,18 @@ public class SerialServer extends Network {
 		clientSocket = new ArrayList<Socket>();
 		out = new ArrayList<ObjectOutputStream>();
 		in = new ArrayList<ObjectInputStream>();
-		rec = new ArrayList<Thread>();
+		rec = new ArrayList<ReceiverThread>();
 	}
 
 	/**
 	 * A játék állapotát az összes kliensnek elküldõ szál.
 	 * @author Horváth Gyõzõ
 	 */
-	private class PeriodicControl extends Thread {
+	public class PeriodicControl extends Thread {
+		public boolean stopThread = false;
 		@Override
 		public void run() {
-			while(true){
+			while(!stopThread){
 				send(gctrl.gameState);
 				try {
 					Thread.sleep(5);
@@ -88,12 +89,11 @@ public class SerialServer extends Network {
 	 * @author Gyozo
 	 *
 	 */
-	private class WaitForClientThread implements Runnable{
-
+	public class WaitForClientThread extends Thread{
+		public boolean stopThread = false;
 		public void run() {
-			
-				while(true){
-					try {
+			while(!stopThread){
+				try {
 					System.out.println("Waiting for Client");
 					clientSocket.add(serverSocket.accept());
 					System.out.println("Client connected.");
@@ -101,40 +101,34 @@ public class SerialServer extends Network {
 					out.add(new ObjectOutputStream(clientSocket.get(clientSocket.size()-1).getOutputStream()));
 					in.add(new ObjectInputStream(clientSocket.get(clientSocket.size()-1).getInputStream()));
 					out.get(clientSocket.size()-1).flush();
-					rec.add(new Thread(new ReceiverThread(clientSocket.size()-1)));
+					rec.add(new ReceiverThread(clientSocket.size()-1));
 					rec.get(clientSocket.size()-1).start();
-					} catch (IOException e) {
-					//	System.err.println(e.getMessage());
-						try {
-							Thread.sleep(1000);
-						} catch (InterruptedException e1) {
-							// TODO Auto-generated catch block
-							e1.printStackTrace();
-						}
-					}
+				} catch (IOException e) {
+					/*try {
+						Thread.sleep(1000);
+					} catch (InterruptedException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}*/
 				}
-				//}
-			
+			}
 		}
 	}
-	
+
 	/**
 	 * Egy adott klienstõl fogadja az ahhoz tartozó játékost.
 	 * @author Horváth Gyõzõ
 	 *
 	 */
-	private class ReceiverThread implements Runnable {
-
+	public class ReceiverThread extends Thread {
+		public boolean stopThread = false;
 		int num;
-
 		public ReceiverThread(int n){
 			num = n;
 		}
-		
 		public void run() {
-
 			try {
-				while (true) {
+				while (!stopThread) {
 					//System.out.println("Server received an object.");
 					Player received = (Player) in.get(num).readUnshared();
 					//System.out.println(received.controls.moveForward);
@@ -158,7 +152,7 @@ public class SerialServer extends Network {
 		disconnect();
 		try {
 			serverSocket = new ServerSocket(10007);
-			wc = new Thread(new WaitForClientThread());
+			wc = new WaitForClientThread();
 			wc.start();
 		} catch (IOException e) {
 			System.err.println("Could not listen on port: 10007.");
@@ -171,18 +165,13 @@ public class SerialServer extends Network {
 	@Override
 	public void disconnect() {
 		try {
-			for (int i = 0; i < out.size(); i++) { 
-				if (out.get(i) != null)
-					out.get(i).close();
+			if(clientSocket != null){
+				for (int i = 0; i < clientSocket.size(); i++) { 
+					if (clientSocket.get(i) != null)
+						clientSocket.get(i).close();
+				}
 			}
-			for (int i = 0; i < in.size(); i++) { 
-				if (in.get(i) != null)
-					in.get(i).close();
-			}
-			for (int i = 0; i < clientSocket.size(); i++) { 
-				if (clientSocket.get(i) != null)
-					clientSocket.get(i).close();
-			}
+
 			if (serverSocket != null)
 				serverSocket.close();
 		} catch (IOException ex) {
@@ -211,4 +200,33 @@ public class SerialServer extends Network {
 		}
 	}
 
+	public void stopThreads() {
+		//kliensektõl fogadó szálak leállítása
+		for(int i = 0; i < rec.size(); i++){
+			try {
+				rec.get(i).stopThread = true;
+				rec.get(i).join();
+				rec.get(i).stopThread = false;
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		try {
+			pc.stopThread = true;
+			pc.join();
+			pc.stopThread = false;
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		try {
+			wc.stopThread = true;
+			wc.join(1000);
+			wc.stopThread = false;
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 }

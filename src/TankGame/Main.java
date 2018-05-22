@@ -12,7 +12,6 @@ import GUI_Pack.GUI;
  * @author Hegyi Sámuel, Horváth Gyõzõ, Szabó Dániel
  */
 public class Main {
-
 	public static void main(String[] args) {
 		StateMachine SM = new StateMachine();
 		GUI g = new GUI(SM);

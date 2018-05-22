@@ -16,6 +16,10 @@ import TankGame.Player;
 public class SerialClient extends Network {
 
 	/**
+	 * Adatok fogadását végzõ szál.
+	 */
+	ReceiverThread rec;
+	/**
 	 * Ezen a socketen keresztül kommunikál az osztály.
 	 */
 	private Socket socket = null;
@@ -34,13 +38,13 @@ public class SerialClient extends Network {
 	 * @author Horváth Gyõzõ
 	 *
 	 */
-	private class ReceiverThread implements Runnable {
-
+	public class ReceiverThread extends Thread {
+		public boolean stopThread = false;;
 		public void run() {
 			GameState received;
 			try {
 				System.out.println("Tankok fogadasa.");
-				while (true) {
+				while (!stopThread) {
 					received = (GameState) in.readUnshared();
 					gui.gameStateReceived(received);
 				}
@@ -48,7 +52,7 @@ public class SerialClient extends Network {
 				System.out.println(ex.getMessage());
 				System.err.println("Server disconnected!");
 			} finally {
-				disconnect();
+				//disconnect();
 			}
 
 			try {
@@ -76,7 +80,7 @@ public class SerialClient extends Network {
 			in = new ObjectInputStream(socket.getInputStream());
 			out.flush();
 			
-			Thread rec = new Thread(new ReceiverThread());
+			rec = new ReceiverThread();
 			rec.start();
 			
 		} catch (UnknownHostException e) {
@@ -123,6 +127,19 @@ public class SerialClient extends Network {
 				socket.close();
 		} catch (IOException ex) {
 			System.err.println("Error while closing conn.");
+		}
+	}
+
+	public void stopThreads() {
+		try {
+			if(rec != null){
+				rec.stopThread = true;
+				rec.join();
+				rec.stopThread = false;
+			}
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 }
