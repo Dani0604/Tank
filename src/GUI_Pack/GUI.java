@@ -36,7 +36,7 @@ public class GUI implements StateEventListener {
 	/**
 	 * Állapotgép, mely megadja, hogy hol vagyunk a játék menüjében.
 	 */
-	private StateMachine SM;
+	StateMachine SM;
 	/**
 	 * Kirajzolja a játék aktuális állapotát.
 	 */
@@ -93,8 +93,8 @@ public class GUI implements StateEventListener {
 	/**
 	 * A játék futása során használt felület.
 	 */
-	public JFrame gameFrm; 
-
+	public JFrame gameFrm;
+	
 	/**
 	 * A kirajzolást folyamatosan frissítõ szál.
 	 * @author Hegyi Sámuel

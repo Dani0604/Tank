@@ -7,10 +7,12 @@ import GUI_Pack.GUI;
  * @author Szabó Dániel
  *
  */
+
 public class StateMachine implements StateEventListener {
 	public State currentState = State.MainMenu;
 	private GUI gui;
 	private GameControl gctrl;
+	public boolean IsPowerUp; 
 
 
 	void setGui(GUI g){

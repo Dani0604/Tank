@@ -23,7 +23,7 @@ public class Tank extends Element implements Serializable {
 	private static final int WIDTH = 15;
 	private static final int VELOCITY = 200;
 	private static final double BACKWARD_SPEED_MULTIPLIER = 0.75;
-	private int health;
+	int health;
 	Color color;
 	private Polygon poly;
 	protected Player player;

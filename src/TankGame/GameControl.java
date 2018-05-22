@@ -5,6 +5,7 @@ import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import GUI_Pack.GUI;
 import Network.SerialServer;
 import TankGame.Element.Type;
 
@@ -51,7 +52,7 @@ public class GameControl {
 	 * A játék állapotát leíró változó
 	 */
 	public GameState gameState;
-	
+
 	/**
 	 * Minimális idõ két powerup között.
 	 */
@@ -60,7 +61,9 @@ public class GameControl {
 	 * Powerupok érkezésének gyakorisága.
 	 */
 	private double PowerUpTimer = POWERUPTIME + Math.random()*5;
-	 
+
+	public boolean IsPowerUp = false;
+
 	/**
 	 * Új játék indítása a korábbi befejezése után.
 	 */
@@ -73,7 +76,7 @@ public class GameControl {
 			players.set(i,p);
 		}
 	}
-	
+
 	/**
 	 * Szerversocket indítása.
 	 */
@@ -82,18 +85,18 @@ public class GameControl {
 			server.disconnect();
 		}
 		server = new SerialServer(this);
- 		server.connect("localhost");
+		server.connect("localhost");
 	}
-	
+
 	/**
 	 * Szerversocket leállítása.
 	 */
 	public void closeServer(){
-		
+
 		server.stopThreads();
 		server.disconnect();
 	}
-	
+
 	/**
 	 * Megadja, hogy épp folyik-e a játék.
 	 * @return isGame Folyamatban van-e a játék.
@@ -101,7 +104,7 @@ public class GameControl {
 	public boolean currentStateIsGame(){
 		return SM.currentState == State.GameHost;
 	}
-	
+
 	/**
 	 * A játéklogikát megvalósító szál.
 	 * @author Szabó Dániel
@@ -116,77 +119,81 @@ public class GameControl {
 			double waitTime = GAME_END_WAIT_TIME;
 			while (!stopThread) {
 				if (currentStateIsGame()){
-				currentTime = System.nanoTime();
-				double deltaT = (currentTime - prevTime)/1000000;
-				prevTime = currentTime;	
-				if (map == null)
-					map = new Map();
-				for (int i = 0; i < players.size(); i++) {
-					Player p = players.get(i);
-					if (p.tank == null){
-						p.tank = new Tank(map);
-						p.tank.player = p;
-						elements.add(p.tank);
+					currentTime = System.nanoTime();
+					double deltaT = (currentTime - prevTime)/1000000;
+					prevTime = currentTime;	
+					if (map == null)
+						map = new Map();
+					for (int i = 0; i < players.size(); i++) {
+						Player p = players.get(i);
+						if (p.tank == null){
+							p.tank = new Tank(map);
+							p.tank.player = p;
+							elements.add(p.tank);
+						}
+						if (p.tank.health > 0){
+							p.tank.color = p.settings.color;
+							if (p.controls.turnLeft)
+								p.tank.rotate(-Math.PI*1.2/ 1000 * deltaT);
+							if (p.controls.turnRight)
+								p.tank.rotate(Math.PI*1.2 / 1000 * deltaT);
+							if (p.controls.shoot && !p.controls.shoot_old) {
+								p.tank.nextBullet.shoot(elements);
+							}
+						}
+						p.controls.shoot_old = p.controls.shoot;
 					}
-					p.tank.color = p.settings.color;
-					if (p.controls.turnLeft)
-						p.tank.rotate(-Math.PI*1.2/ 1000 * deltaT);
-					if (p.controls.turnRight)
-						p.tank.rotate(Math.PI*1.2 / 1000 * deltaT);
-					if (p.controls.shoot && !p.controls.shoot_old) {
-						p.tank.nextBullet.shoot(elements);
-					}
-					p.controls.shoot_old = p.controls.shoot;
-				}
 
-				//Mozgatások, ütközések
-				for (int i = 0; i < elements.size(); i++) {
-					Element e1 = elements.get(i);
-					e1.move(T);
-					e1.wallCollision(map);
-					for (int j = i+1; j < elements.size(); j++) {
-						Element e2 = elements.get(j);
-						e1.collisionDetection(e2);
-						e2.collisionDetection(e1);	
-						if(e2.deleteElement){
-							e2.delete();
-							elements.remove(j);
+					//Mozgatások, ütközések
+					for (int i = 0; i < elements.size(); i++) {
+						Element e1 = elements.get(i);
+						e1.move(T);
+						e1.wallCollision(map);
+						for (int j = i+1; j < elements.size(); j++) {
+							Element e2 = elements.get(j);
+							e1.collisionDetection(e2);
+							e2.collisionDetection(e1);	
+							if(e2.deleteElement){
+								e2.delete();
+								elements.remove(j);
+							}
+						}
+						if(e1.deleteElement){
+							e1.delete();
+							elements.remove(i);
 						}
 					}
-					if(e1.deleteElement){
-						e1.delete();
-						elements.remove(i);
-					}
-				}
-				
-				PowerUpTimer -= T/1000;		
-				if (PowerUpTimer <= 0){
-					elements.add(new PowerUp(map));
-					PowerUpTimer = POWERUPTIME + Math.random()*5;
-				}
-				
-				int tankNum = 0;
-				for (int i = 0; i < elements.size(); i++) {
-					if (elements.get(i).getType() == Type.TANK) tankNum++;
-				}
 
-				if (tankNum <= 1){
-					waitTime -= deltaT;
-				}
-				else{
-					waitTime = GAME_END_WAIT_TIME;
-				} 
-				
-				if (waitTime <= 0){
-					newMatch();
-				}
+					if (IsPowerUp){
+						PowerUpTimer -= T/1000;		
+						if (PowerUpTimer <= 0){
+							elements.add(new PowerUp(map));
+							PowerUpTimer = POWERUPTIME + Math.random()*5;
+						}
+					}
+
+					int tankNum = 0;
+					for (int i = 0; i < elements.size(); i++) {
+						if (elements.get(i).getType() == Type.TANK) tankNum++;
+					}
+
+					if (tankNum <= 1){
+						waitTime -= deltaT;
+					}
+					else{
+						waitTime = GAME_END_WAIT_TIME;
+					} 
+
+					if (waitTime <= 0){
+						newMatch();
+					}
 				}
 				gameState = new GameState();
 				gameState.state = SM.currentState;
 				gameState.elements = elements == null ? null : new CopyOnWriteArrayList<Element>(elements);
 				gameState.map = map == null || map.lines == null ? null : new ArrayList<Rectangle>(map.lines);
 				gameState.players = new CopyOnWriteArrayList<Player>(players);
-				
+
 				try {
 					Thread.sleep((int)T);
 				} 
@@ -197,17 +204,18 @@ public class GameControl {
 			}
 		}
 	}
-	
+
 	GameControl(StateMachine sm) {
 		SM = sm;
 		players = new CopyOnWriteArrayList<Player>();
 		gameState = new GameState();
 		gameState.state = SM.currentState;
+		IsPowerUp = SM.IsPowerUp;
 		startServer();
 		pc = new PeriodicControl();
 		pc.start();
 	}
-	
+
 	/**
 	 * Játék indítása.
 	 */
@@ -215,7 +223,7 @@ public class GameControl {
 		map = new Map();
 		elements = new CopyOnWriteArrayList<Element>();
 	}
-	
+
 	/**
 	 * Játékos fogadása, majd feldolgozása.
 	 * @param _player Fogadott játékos

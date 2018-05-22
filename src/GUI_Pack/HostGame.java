@@ -132,6 +132,7 @@ public class HostGame {
 				System.out.println(MaxPlayer);
 				System.out.println(IsPowerUp);
 				if(k==3) {
+					gui.SM.IsPowerUp = IsPowerUp;
 					gui.onEventStartGame();
 				}
 			}
